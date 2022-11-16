@@ -1,0 +1,46 @@
+---
+app-id: com.cockos.Reaper
+command: reaper
+runtime-version: "22.08"
+runtime: org.freedesktop.Platform
+sdk: org.freedesktop.Sdk
+finish-args:
+  - --device=all
+  - --share=ipc
+  - --filesystem=xdg-run/pipewire-0
+  - --socket=pulseaudio
+  - --socket=x11
+  - --share=network
+  - --talk-name=org.freedesktop.Notifications
+  - --filesystem=host
+  - --env=LV2_PATH=/app/extensions/Plugins/lv2
+  - --env=VST_PATH=/app/extensions/Plugins/lxvst
+  - --allow=multiarch
+
+add-extensions:
+    org.freedesktop.LinuxAudio.Plugins:
+      directory: extensions/Plugins
+      version: '22.08'
+      add-ld-path: lib
+      merge-dirs: lv2;lxvst
+      subdirectories: true
+      no-autodownload: true
+
+modules:
+  - name: "reaper"
+    buildsystem: simple 
+    build-options: 
+      strip: false
+      no-debuginfo: true
+    build-commands:
+      - tar xf reaper.tar.xz -C ${FLATPAK_DEST}
+    post-install:
+      - ln -sf ../reaper_linux_x86_64/reaper ${FLATPAK_DEST}/bin/
+      - install -d /app/extensions/Plugins
+    sources:
+      - type: file
+        url: 'https://www.reaper.fm/files/6.x/reaper670_linux_x86_64.tar.xz'
+        sha512: 206f8a2fe585a935d88ebff09f1a199728a18656c2d7906718f4c7a9806efbcf8bc6f651ad1fc7ce978b4bdda3068aececb9ebd7d6c2544f08483b82403ce00c
+        dest-filename: reaper.tar.xz
+        only-arches:
+          - x86_64
