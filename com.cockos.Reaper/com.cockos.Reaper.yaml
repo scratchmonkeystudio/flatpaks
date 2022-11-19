@@ -35,7 +35,8 @@ modules:
     build-commands:
       - tar xf reaper.tar.xz -C ${FLATPAK_DEST}
     post-install:
-      - ln -sf ../reaper_linux_x86_64/reaper ${FLATPAK_DEST}/bin/
+      - install -d ${FLATPAK_DEST}/bin
+      - ln -sf ../reaper_linux_x86_64/REAPER/reaper ${FLATPAK_DEST}/bin/
       - install -d /app/extensions/Plugins
     sources:
       - type: file
